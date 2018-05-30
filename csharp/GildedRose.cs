@@ -4,6 +4,10 @@ namespace csharp
 {
     public class GildedRose
     {
+        private const string Sulfuras = "sulfuras";
+        private const string AgedBrie = "aged brie";
+        private const string BackstagePasses = "backstage passes";
+
         private readonly IList<Item> _items;
         public GildedRose(IList<Item> items)
         {
@@ -14,7 +18,8 @@ namespace csharp
         {
             foreach (Item item in _items)
             {
-                if (item.Name != "Aged Brie" && item.Name != "Backstage passes to a TAFKAL80ETC concert" && item.Quality > 0 && item.Name != "Sulfuras, Hand of Ragnaros")
+
+                if (!ContainsSubstringIgnoreCase(item.Name, AgedBrie) && !ContainsSubstringIgnoreCase(item.Name, BackstagePasses) && item.Quality > 0 && !ContainsSubstringIgnoreCase(item.Name, Sulfuras))
                 {
                     item.Quality = item.Quality - 1;
                 }
@@ -24,7 +29,7 @@ namespace csharp
                     {
                         item.Quality = item.Quality + 1;
 
-                        if (item.Name == "Backstage passes to a TAFKAL80ETC concert")
+                        if (ContainsSubstringIgnoreCase(item.Name, BackstagePasses))
                         {
                             if (item.SellIn < 11 && item.Quality < 50)
                             {
@@ -38,18 +43,18 @@ namespace csharp
                     }
                 }
 
-                if (item.Name != "Sulfuras, Hand of Ragnaros")
+                if (!ContainsSubstringIgnoreCase(item.Name, Sulfuras))
                 {
                     item.SellIn = item.SellIn - 1;
                 }
 
                 if (item.SellIn < 0)
                 {
-                    if (item.Name != "Aged Brie")
+                    if (!ContainsSubstringIgnoreCase(item.Name, AgedBrie))
                     {
-                        if (item.Name != "Backstage passes to a TAFKAL80ETC concert")
+                        if (!ContainsSubstringIgnoreCase(item.Name, BackstagePasses))
                         {
-                            if (item.Quality > 0 && item.Name != "Sulfuras, Hand of Ragnaros")
+                            if (item.Quality > 0 && !ContainsSubstringIgnoreCase(item.Name, Sulfuras))
                             {
                                 item.Quality = item.Quality - 1;
                             }
@@ -65,6 +70,11 @@ namespace csharp
                     }
                 }
             }
+        }
+
+        private bool ContainsSubstringIgnoreCase(string wholeString, string substring)
+        {
+            return wholeString.ToLower().Contains(substring);
         }
     }
 }

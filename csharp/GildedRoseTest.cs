@@ -41,5 +41,14 @@ namespace csharp
             app.UpdateQuality();
             Assert.AreEqual(0, Items[0].Quality);
         }
+
+        [Test]
+        public void UpdateQuality_SingleItemAfterAgedBrie_QualityNoMoreThan50()
+        {
+            IList<Item> Items = new List<Item> { new Item { Name = "Aged Brie", Quality = 50 } };
+            GildedRose app = new GildedRose(Items);
+            app.UpdateQuality();
+            Assert.AreEqual(50, Items[0].Quality);
+        }
     }
 }
