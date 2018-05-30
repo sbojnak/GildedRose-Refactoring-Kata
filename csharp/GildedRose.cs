@@ -11,6 +11,7 @@ namespace csharp
         private const string BackstagePasses = "backstage passes";
 
         private readonly IList<Item> _items;
+
         public GildedRose(IList<Item> items)
         {
             _items = items;
@@ -32,21 +33,17 @@ namespace csharp
                     {
                         if (item.SellIn <= 0)
                         {
-                            i = 0;
+                            return 0;
                         }
-                        else if (item.SellIn < 6)
+                        if (item.SellIn < 6)
                         {
-                            i += 3;
+                            return i + 3;
                         }
-                        else if (item.SellIn < 11)
+                        if (item.SellIn < 11)
                         {
-                            i += 2;
+                            return i + 2;
                         }
-                        else
-                        {
-                            i += 1;
-                        }
-                        return i;
+                        return i + 1;
                     });
                     item.SellIn--;
                 }
