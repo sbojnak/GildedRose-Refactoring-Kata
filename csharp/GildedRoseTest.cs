@@ -37,10 +37,40 @@ namespace csharp
         public void UpdateQuality_SingleItemAfterConcert_QualityZero()
         {
             IList<Item> items =
-                new List<Item> {new Item {Name = "Backstage passes to a TAFKAL80ETC concert", Quality = 40}};
+                new List<Item> {new Item {Name = "Backstage passes to a TAFKAL80ETC concert", Quality = 40, SellIn = 0}};
             var app = new GildedRose(items);
             app.UpdateQuality();
             Assert.AreEqual(0, items[0].Quality);
+        }
+
+        [Test]
+        public void UpdateQuality_SingleItemConcert_IncreaseQualityOnce()
+        {
+            IList<Item> items =
+                new List<Item> { new Item { Name = "Backstage passes to a TAFKAL80ETC concert", Quality = 32, SellIn = 11 } };
+            var app = new GildedRose(items);
+            app.UpdateQuality();
+            Assert.AreEqual(33, items[0].Quality);
+        }
+
+        [Test]
+        public void UpdateQuality_SingleItemConcert_IncreaseQualityTwice()
+        {
+            IList<Item> items =
+                new List<Item> { new Item { Name = "Backstage passes to a TAFKAL80ETC concert", Quality = 32, SellIn = 8 } };
+            var app = new GildedRose(items);
+            app.UpdateQuality();
+            Assert.AreEqual(34, items[0].Quality);
+        }
+
+        [Test]
+        public void UpdateQuality_SingleItemConcert_IncreaseQualityThrice()
+        {
+            IList<Item> items =
+                new List<Item> { new Item { Name = "Backstage passes to a TAFKAL80ETC concert", Quality = 24, SellIn = 5 } };
+            var app = new GildedRose(items);
+            app.UpdateQuality();
+            Assert.AreEqual(27, items[0].Quality);
         }
 
         [Test]
