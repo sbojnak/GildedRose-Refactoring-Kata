@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using csharp.QualityUpdators;
 
 namespace csharp
 {
@@ -23,46 +24,22 @@ namespace csharp
             {
                 if (ContainsSubstringIgnoreCase(item.Name, AgedBrie))
                 {
-                    item.Quality = UpdateQualityWithCheck(item, i => i + 1);
-                    item.SellIn--;
+                    new AgedBrieUpdator().UpdateQuality(item);
                 }
 
                 else if (ContainsSubstringIgnoreCase(item.Name, BackstagePasses))
                 {
-                    item.Quality = UpdateQualityWithCheck(item, i =>
-                    {
-                        if (item.SellIn <= 0)
-                        {
-                            return 0;
-                        }
-                        if (item.SellIn < 6)
-                        {
-                            return i + 3;
-                        }
-                        if (item.SellIn < 11)
-                        {
-                            return i + 2;
-                        }
-                        return i + 1;
-                    });
-                    item.SellIn--;
+                    new BackstagePassesUpdator().UpdateQuality(item);
                 }
-                else if (!ContainsSubstringIgnoreCase(item.Name, Sulfuras))
+                else if (ContainsSubstringIgnoreCase(item.Name, Sulfuras))
                 {
-                    item.Quality = UpdateQualityWithCheck(item, i => i - 1);
-                    item.SellIn--;
+                    new SulfurasUpdator().UpdateQuality(item);
+                }
+                else
+                {
+                    new Updator().UpdateQuality(item);
                 }
             }
-        }
-
-        private int UpdateQualityWithCheck(Item item, Func<int, int> qualityUpdater)
-        {
-            int updatedQuality = qualityUpdater(item.Quality);
-            if (item.SellIn < 0)
-            {
-                updatedQuality = qualityUpdater(updatedQuality);
-            }
-            return Enumerable.Range(0, 50).Contains(updatedQuality) ? updatedQuality : item.Quality;
         }
 
         private bool ContainsSubstringIgnoreCase(string wholeString, string substring)
