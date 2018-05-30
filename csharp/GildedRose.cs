@@ -7,16 +7,31 @@ namespace csharp
 {
     public class GildedRose
     {
+        #region Constants
+
         private const string Sulfuras = "sulfuras";
         private const string AgedBrie = "aged brie";
         private const string BackstagePasses = "backstage passes";
 
+        #endregion
+
+
+        #region Fields
+
         private readonly IList<Item> _items;
+
+        #endregion
+
+        #region Ctors
 
         public GildedRose(IList<Item> items)
         {
             _items = items;
         }
+
+        #endregion
+
+        #region PublicMethods
 
         public void UpdateQuality()
         {
@@ -25,6 +40,10 @@ namespace csharp
                 SelectUpdatorInstance(item).UpdateQuality(item);
             }
         }
+
+        #endregion
+
+        #region PrivateMethods
 
         private Updator SelectUpdatorInstance(Item item)
         {
@@ -47,5 +66,7 @@ namespace csharp
         {
             return wholeString.ToLower().Contains(substring);
         }
+
+        #endregion
     }
 }
