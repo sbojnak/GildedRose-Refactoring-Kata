@@ -25,9 +25,18 @@ namespace csharp
         }
 
         [Test]
-        public void UpdateQuality_SingleItemOnSellInOne_DecreaseQuality()
+        public void UpdateQuality_SingleItemOnSellInQualityOne_DecreaseQuality()
         {
             IList<Item> Items = new List<Item> { new Item { Name = "foo", Quality = 1 } };
+            GildedRose app = new GildedRose(Items);
+            app.UpdateQuality();
+            Assert.AreEqual(0, Items[0].Quality);
+        }
+
+        [Test]
+        public void UpdateQuality_SingleItemAfterConcert_QualityZero()
+        {
+            IList<Item> Items = new List<Item> { new Item { Name = "Backstage passes to a TAFKAL80ETC concert", Quality = 40 } };
             GildedRose app = new GildedRose(Items);
             app.UpdateQuality();
             Assert.AreEqual(0, Items[0].Quality);
