@@ -50,5 +50,26 @@ namespace csharp
             app.UpdateQuality();
             Assert.AreEqual(50, Items[0].Quality);
         }
+
+        [Test]
+        public void UpdateQuality_ThreeItemEachSpecificType_ReturnCorrectResults()
+        {
+            IList<Item> Items = new List<Item>
+            {
+                new Item { Name = "Aged Brie", Quality = 43, SellIn = -2},
+                new Item { Name = "Backstage passes", Quality = 15, SellIn = 10},
+                new Item { Name = "Sulfuras", Quality = 80, SellIn = 5}
+            };
+            GildedRose app = new GildedRose(Items);
+            app.UpdateQuality();
+            Assert.AreEqual(45, Items[0].Quality, "Quality of Aged Brie is not correct");
+            Assert.AreEqual(-3, Items[0].SellIn, "SellIn of Aged Brie is not correct");
+
+            Assert.AreEqual(17, Items[1].Quality, "Quality of Backstage passes is not correct");
+            Assert.AreEqual(9, Items[1].SellIn, "SellIn of Backstage passes is not correct");
+
+            Assert.AreEqual(80, Items[2].Quality, "Quality of Sulfuras is not correct");
+            Assert.AreEqual(5, Items[2].SellIn, "SellIn of Sulfuras is not correct");
+        }
     }
 }

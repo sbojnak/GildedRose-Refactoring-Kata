@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace csharp
 {
@@ -18,58 +20,52 @@ namespace csharp
         {
             foreach (Item item in _items)
             {
-
-                if (!ContainsSubstringIgnoreCase(item.Name, AgedBrie) && !ContainsSubstringIgnoreCase(item.Name, BackstagePasses) && item.Quality > 0 && !ContainsSubstringIgnoreCase(item.Name, Sulfuras))
+                if (ContainsSubstringIgnoreCase(item.Name, AgedBrie))
                 {
-                    item.Quality = item.Quality - 1;
+                    item.Quality = UpdateQualityWithCheck(item, i => i + 1);
+                    item.SellIn--;
                 }
-                else
-                {
-                    if (item.Quality < 50)
-                    {
-                        item.Quality = item.Quality + 1;
 
-                        if (ContainsSubstringIgnoreCase(item.Name, BackstagePasses))
+                else if (ContainsSubstringIgnoreCase(item.Name, BackstagePasses))
+                {
+                    item.Quality = UpdateQualityWithCheck(item, i =>
+                    {
+                        if (item.SellIn <= 0)
                         {
-                            if (item.SellIn < 11 && item.Quality < 50)
-                            {
-                                item.Quality = item.Quality + 1;
-                            }
-                            if (item.SellIn < 6 && item.Quality < 50)
-                            {
-                                item.Quality = item.Quality + 1;
-                            }
+                            i = 0;
                         }
-                    }
-                }
-
-                if (!ContainsSubstringIgnoreCase(item.Name, Sulfuras))
-                {
-                    item.SellIn = item.SellIn - 1;
-                }
-
-                if (item.SellIn < 0)
-                {
-                    if (!ContainsSubstringIgnoreCase(item.Name, AgedBrie))
-                    {
-                        if (!ContainsSubstringIgnoreCase(item.Name, BackstagePasses))
+                        else if (item.SellIn < 6)
                         {
-                            if (item.Quality > 0 && !ContainsSubstringIgnoreCase(item.Name, Sulfuras))
-                            {
-                                item.Quality = item.Quality - 1;
-                            }
+                            i += 3;
+                        }
+                        else if (item.SellIn < 11)
+                        {
+                            i += 2;
                         }
                         else
                         {
-                            item.Quality = 0;
+                            i += 1;
                         }
-                    }
-                    else if (item.Quality < 50)
-                    {
-                        item.Quality = item.Quality + 1;
-                    }
+                        return i;
+                    });
+                    item.SellIn--;
+                }
+                else if (!ContainsSubstringIgnoreCase(item.Name, Sulfuras))
+                {
+                    item.Quality = UpdateQualityWithCheck(item, i => i - 1);
+                    item.SellIn--;
                 }
             }
+        }
+
+        private int UpdateQualityWithCheck(Item item, Func<int, int> qualityUpdater)
+        {
+            int updatedQuality = qualityUpdater(item.Quality);
+            if (item.SellIn < 0)
+            {
+                updatedQuality = qualityUpdater(updatedQuality);
+            }
+            return Enumerable.Range(0, 50).Contains(updatedQuality) ? updatedQuality : item.Quality;
         }
 
         private bool ContainsSubstringIgnoreCase(string wholeString, string substring)
