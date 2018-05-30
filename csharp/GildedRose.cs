@@ -22,24 +22,25 @@ namespace csharp
         {
             foreach (Item item in _items)
             {
-                if (ContainsSubstringIgnoreCase(item.Name, AgedBrie))
-                {
-                    new AgedBrieUpdator().UpdateQuality(item);
-                }
-
-                else if (ContainsSubstringIgnoreCase(item.Name, BackstagePasses))
-                {
-                    new BackstagePassesUpdator().UpdateQuality(item);
-                }
-                else if (ContainsSubstringIgnoreCase(item.Name, Sulfuras))
-                {
-                    new SulfurasUpdator().UpdateQuality(item);
-                }
-                else
-                {
-                    new Updator().UpdateQuality(item);
-                }
+                SelectUpdatorInstance(item).UpdateQuality(item);
             }
+        }
+
+        private Updator SelectUpdatorInstance(Item item)
+        {
+            if (ContainsSubstringIgnoreCase(item.Name, AgedBrie))
+            {
+                return new AgedBrieUpdator();
+            }
+            if (ContainsSubstringIgnoreCase(item.Name, BackstagePasses))
+            {
+                return new BackstagePassesUpdator();
+            }
+            if (ContainsSubstringIgnoreCase(item.Name, Sulfuras))
+            {
+                return new SulfurasUpdator();
+            }
+            return new Updator();
         }
 
         private bool ContainsSubstringIgnoreCase(string wholeString, string substring)

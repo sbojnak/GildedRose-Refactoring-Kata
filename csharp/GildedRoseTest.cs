@@ -9,86 +9,95 @@ namespace csharp
         [Test]
         public void UpdateQuality_SingleItemOnZeroSellInAndZeroQuality_MaintainCorrectName()
         {
-            IList<Item> Items = new List<Item> {new Item {Name = "foo", SellIn = 0, Quality = 0}};
-            GildedRose app = new GildedRose(Items);
+            IList<Item> items = new List<Item> {new Item {Name = "foo", SellIn = 0, Quality = 0}};
+            var app = new GildedRose(items);
             app.UpdateQuality();
-            Assert.AreEqual("foo", Items[0].Name);
+            Assert.AreEqual("foo", items[0].Name);
         }
 
         [Test]
         public void UpdateQuality_SingleItemOnSellInOne_DecreaseSellIn()
         {
-            IList<Item> Items = new List<Item> {new Item {Name = "foo", SellIn = 1}};
-            GildedRose app = new GildedRose(Items);
+            IList<Item> items = new List<Item> {new Item {Name = "foo", SellIn = 1}};
+            var app = new GildedRose(items);
             app.UpdateQuality();
-            Assert.AreEqual(0, Items[0].SellIn);
+            Assert.AreEqual(0, items[0].SellIn);
         }
 
         [Test]
         public void UpdateQuality_SingleItemOnSellInQualityOne_DecreaseQuality()
         {
-            IList<Item> Items = new List<Item> {new Item {Name = "foo", Quality = 1}};
-            GildedRose app = new GildedRose(Items);
+            IList<Item> items = new List<Item> {new Item {Name = "foo", Quality = 1}};
+            var app = new GildedRose(items);
             app.UpdateQuality();
-            Assert.AreEqual(0, Items[0].Quality);
+            Assert.AreEqual(0, items[0].Quality);
         }
 
         [Test]
         public void UpdateQuality_SingleItemAfterConcert_QualityZero()
         {
-            IList<Item> Items =
+            IList<Item> items =
                 new List<Item> {new Item {Name = "Backstage passes to a TAFKAL80ETC concert", Quality = 40}};
-            GildedRose app = new GildedRose(Items);
+            var app = new GildedRose(items);
             app.UpdateQuality();
-            Assert.AreEqual(0, Items[0].Quality);
+            Assert.AreEqual(0, items[0].Quality);
         }
 
         [Test]
         public void UpdateQuality_SingleItemAfterAgedBrie_QualityNoMoreThan50()
         {
-            IList<Item> Items = new List<Item> {new Item {Name = "Aged Brie", Quality = 50}};
-            GildedRose app = new GildedRose(Items);
+            IList<Item> items = new List<Item> {new Item {Name = "Aged Brie", Quality = 50}};
+            var app = new GildedRose(items);
             app.UpdateQuality();
-            Assert.AreEqual(50, Items[0].Quality);
+            Assert.AreEqual(50, items[0].Quality);
         }
 
         [Test]
         public void UpdateQuality_ThreeItemEachSpecificType_ReturnCorrectResults()
         {
-            IList<Item> Items = new List<Item>
+            IList<Item> items = new List<Item>
             {
                 new Item {Name = "Aged Brie", Quality = 43, SellIn = -2},
                 new Item {Name = "Backstage passes", Quality = 15, SellIn = 10},
                 new Item {Name = "Sulfuras", Quality = 80, SellIn = 5}
             };
-            GildedRose app = new GildedRose(Items);
+            var app = new GildedRose(items);
             app.UpdateQuality();
-            Assert.AreEqual(45, Items[0].Quality, "Quality of Aged Brie is not correct");
-            Assert.AreEqual(-3, Items[0].SellIn, "SellIn of Aged Brie is not correct");
+            Assert.AreEqual(45, items[0].Quality, "Quality of Aged Brie is not correct");
+            Assert.AreEqual(-3, items[0].SellIn, "SellIn of Aged Brie is not correct");
 
-            Assert.AreEqual(17, Items[1].Quality, "Quality of Backstage passes is not correct");
-            Assert.AreEqual(9, Items[1].SellIn, "SellIn of Backstage passes is not correct");
+            Assert.AreEqual(17, items[1].Quality, "Quality of Backstage passes is not correct");
+            Assert.AreEqual(9, items[1].SellIn, "SellIn of Backstage passes is not correct");
 
-            Assert.AreEqual(80, Items[2].Quality, "Quality of Sulfuras is not correct");
-            Assert.AreEqual(5, Items[2].SellIn, "SellIn of Sulfuras is not correct");
+            Assert.AreEqual(80, items[2].Quality, "Quality of Sulfuras is not correct");
+            Assert.AreEqual(5, items[2].SellIn, "SellIn of Sulfuras is not correct");
         }
 
         [Test]
         public void UpdateQuality_SingleItemSellInBelowZero_QualityDecreaseTwice()
         {
-            IList<Item> Items = new List<Item> { new Item { Name = "Random", Quality = 42, SellIn = -1} };
-            GildedRose app = new GildedRose(Items);
+            IList<Item> items = new List<Item> { new Item { Name = "Random", Quality = 42, SellIn = -1} };
+            var app = new GildedRose(items);
             app.UpdateQuality();
-            Assert.AreEqual(40, Items[0].Quality);
+            Assert.AreEqual(40, items[0].Quality);
         }
 
         [Test]
-        public void UpdateQuality_SingleItemQuality50OnAgedBrie_QualityUnchanged()
+        public void UpdateQuality_SingleItemAgedBrieAfterSellInZero_QualityIncreaseTwice()
         {
-            IList<Item> Items = new List<Item> { new Item { Name = "Aged brie", Quality = 50, SellIn = 17 } };
-            GildedRose app = new GildedRose(Items);
+            IList<Item> items = new List<Item> { new Item { Name = "Aged brie", Quality = 45, SellIn = -1 } };
+            var app = new GildedRose(items);
             app.UpdateQuality();
-            Assert.AreEqual(50, Items[0].Quality);
+            Assert.AreEqual(47, items[0].Quality);
+        }
+
+        [Test]
+        public void UpdateQuality_SingleItemAgedBrieSellInZeroQuality49_QualityUnchanged()
+        {
+            IList<Item> items = new List<Item> { new Item { Name = "Aged brie", Quality = 49, SellIn = -1 } };
+            var app = new GildedRose(items);
+            app.UpdateQuality();
+            Assert.AreEqual(49, items[0].Quality);
         }
     }
 }
